@@ -48,6 +48,17 @@ Future<void> showmenu(int userId) async {
     print("6. Exit");
     stdout.write("Choose... ");
     choice = stdin.readLineSync();
+     if (choice == "1") {
+      await showAllExpenses(userId);
+    } else if (choice == "2") {
+      await showTodayExpenses(userId);
+    } else if (choice == "3") {
+      await searchExpenses(userId);
+      }else if (choice == "4"){
+      await addExpense(userId);
+      }else if (choice == "5") {
+      await deleteExpense(userId);
+    } else if (choice != "6") {
     if (choice == "1") {
       await showAllExpenses(userId);
     } else if (choice == "2") {
@@ -129,7 +140,28 @@ Future<void> searchExpenses(int userId) async {
 }
 
 //fea 4
+Future<void> addExpense(int userId) async {
+  stdout.write("Item: ");
+  String? item = stdin.readLineSync()?.trim();
+  stdout.write("Paid amount: ");
+  String? paidStr = stdin.readLineSync()?.trim();
+  int? paid = int.tryParse(paidStr ?? "");
 
+  if (item == null || item.isEmpty || paid == null) {
+    print("Invalid input.");
+    return;
+  }
+
+  final body = {"items": item, "paid": paid.toString(), "userId": userId.toString()};
+  final url = Uri.parse('http://localhost:3000/expenses/add');
+  final response = await http.post(url, body: body);
+
+  if (response.statusCode == 200) {
+    print("Expense added successfully!");
+  } else {
+    print("Error: ${response.body}");
+  }
+}
 //fea 5+6
 Future<void> deleteExpense(int userId) async {
   print("==== Delete Expense ====");
