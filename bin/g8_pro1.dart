@@ -159,8 +159,8 @@ Future<void> addExpense(int userId) async {
 }
 //fea 5+6
 Future<void> deleteExpense(int userId) async {
-  print("==== Delete Expense ====");
-  stdout.write("Enter Expense ID to delete: ");
+  print("==== Delete an item ====");
+  stdout.write("Item id: ");
   String? idInput = stdin.readLineSync();
   if (idInput == null || idInput.isEmpty) {
     print("Invalid ID.");
@@ -171,9 +171,9 @@ Future<void> deleteExpense(int userId) async {
   final response = await http.delete(url);
 
   if (response.statusCode == 200) {
-    print("✅ Expense deleted successfully.");
+    print("deleted");
   } else if (response.statusCode == 404) {
-    print("⚠️ Expense not found.");
+    print("Expense not found.");
   } else {
     print("❌ Error deleting expense: ${response.body}");
   }
