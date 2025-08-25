@@ -59,11 +59,6 @@ Future<void> showmenu(int userId) async {
       }else if (choice == "5") {
       await deleteExpense(userId);
     } else if (choice != "6") {
-    if (choice == "1") {
-      await showAllExpenses(userId);
-    } else if (choice == "2") {
-      await showTodayExpenses(userId);
-    } else {
       print("Invalid choice");
     }
   } while (choice != "6");
