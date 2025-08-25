@@ -48,11 +48,18 @@ Future<void> showmenu(int userId) async {
     print("6. Exit");
     stdout.write("Choose... ");
     choice = stdin.readLineSync();
-    if (choice == "1") {
+     if (choice == "1") {
       await showAllExpenses(userId);
     } else if (choice == "2") {
       await showTodayExpenses(userId);
-    } else if{
+    } else if (choice == "3") {
+      await searchExpenses(userId);
+      }else if (choice == "4"){
+      await addExpense(userId);
+      }else if (choice == "5") {
+      await deleteExpense(userId);
+    } else if (choice != "6") {
+
       print("Invalid choice");
     }else if (choice == "6") {
       exitApp(); 
@@ -108,7 +115,76 @@ Future<void> showTodayExpenses(int userId) async {
   }
 }
 //fea 3
+Future<void> searchExpenses(int userId) async {
+  stdout.write("Item to search: ");
+  String? keyword = stdin.readLineSync()?.trim();
+  if (keyword == null || keyword.isEmpty) {
+    print("No keyword entered.");
+    return;
+  }
+  final url = Uri.parse('http://localhost:3000/expenses/search/$userId?keyword=$keyword');
+  final response = await http.get(url);
+  if (response.statusCode == 200) {
+    final List expenses = jsonDecode(response.body);
+    if (expenses.isEmpty) {
+      print("No item '$keyword'.");
+    } else {
+      print("------ Search Results -----");
+      for (var exp in expenses) {
+        print(" ${exp['id']}. ${exp['items']} : ${exp['paid']}฿ :${exp['date']}");
+      }
+    }
+  } else {
+    print("Error searching expenses: ${response.body}");
+  }
+}
 
 //fea 4
+Future<void> addExpense(int userId) async {
+  stdout.write("Item: ");
+  String? item = stdin.readLineSync()?.trim();
+  stdout.write("Paid amount: ");
+  String? paidStr = stdin.readLineSync()?.trim();
+  int? paid = int.tryParse(paidStr ?? "");
 
+  if (item == null || item.isEmpty || paid == null) {
+    print("Invalid input.");
+    return;
+  }
+
+  final body = {"items": item, "paid": paid.toString(), "userId": userId.toString()};
+  final url = Uri.parse('http://localhost:3000/expenses/add');
+  final response = await http.post(url, body: body);
+
+  if (response.statusCode == 200) {
+    print("Expense added successfully!");
+  } else {
+    print("Error: ${response.body}");
+  }
+}
 //fea 5+6
+Future<void> deleteExpense(int userId) async {
+  print("==== Delete an item ====");
+  stdout.write("Item id: ");
+  String? idInput = stdin.readLineSync();
+  if (idInput == null || idInput.isEmpty) {
+    print("Invalid ID.");
+    return;
+  }
+
+  final url = Uri.parse('http://localhost:3000/expenses/$userId/$idInput');
+  final response = await http.delete(url);
+
+  if (response.statusCode == 200) {
+    print("deleted");
+  } else if (response.statusCode == 404) {
+    print("Expense not found.");
+  } else {
+    print("❌ Error deleting expense: ${response.body}");
+  }
+}
+
+void exitApp() {
+  print("---------- Bye ----------");
+  exit(0);
+}
