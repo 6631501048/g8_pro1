@@ -34,5 +34,5 @@ Future<void> deleteExpense(int userId) async {
 
 void exitApp() {
   print("---------- Bye ----------");
-  exit(0); // off program
+  exit(0);
 }
