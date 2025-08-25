@@ -59,9 +59,14 @@ Future<void> showmenu(int userId) async {
       }else if (choice == "5") {
       await deleteExpense(userId);
     } else if (choice != "6") {
+
       print("Invalid choice");
+    }else if (choice == "6") {
+      exitApp(); 
     }
+        
   } while (choice != "6");
+  
 }
 
 Future<void> showAllExpenses(int userId) async {
