@@ -108,3 +108,28 @@ Future<void> showTodayExpenses(int userId) async {
 //fea 4
 
 //fea 5+6
+Future<void> deleteExpense(int userId) async {
+  print("==== Delete Expense ====");
+  stdout.write("Enter Expense ID to delete: ");
+  String? idInput = stdin.readLineSync();
+  if (idInput == null || idInput.isEmpty) {
+    print("Invalid ID.");
+    return;
+  }
+
+  final url = Uri.parse('http://localhost:3000/expenses/$userId/$idInput');
+  final response = await http.delete(url);
+
+  if (response.statusCode == 200) {
+    print("✅ Expense deleted successfully.");
+  } else if (response.statusCode == 404) {
+    print("⚠️ Expense not found.");
+  } else {
+    print("❌ Error deleting expense: ${response.body}");
+  }
+}
+
+void exitApp() {
+  print("---------- Bye ----------");
+  exit(0); // off program
+}
