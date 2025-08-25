@@ -52,10 +52,14 @@ Future<void> showmenu(int userId) async {
       await showAllExpenses(userId);
     } else if (choice == "2") {
       await showTodayExpenses(userId);
-    } else {
+    } else if{
       print("Invalid choice");
+    }else if (choice == "6") {
+      exitApp(); 
     }
+        
   } while (choice != "6");
+  
 }
 
 Future<void> showAllExpenses(int userId) async {
